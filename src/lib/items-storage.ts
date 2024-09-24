@@ -1,15 +1,15 @@
 import { Item } from '../types';
 import { CustomStorage } from './custom-storage';
-import { isValidItems, isValidItemFields } from '../utils';
+import { isValidItemArray, isValidItem } from '../utils';
 
 const STORAGE_ITEMS_KEY = 'items';
 
 class ItemsStorage {
   private static instance: ItemsStorage;
-  private storage: CustomStorage<Item>;
+  private storage: CustomStorage<Item[]>;
 
   private constructor() {
-    this.storage = new CustomStorage<Item>(STORAGE_ITEMS_KEY);
+    this.storage = new CustomStorage<Item[]>(STORAGE_ITEMS_KEY);
   }
 
   public static getInstance(): ItemsStorage {
@@ -18,8 +18,8 @@ class ItemsStorage {
 
   public getItems(): Item[] | null {
     try {
-      const items = this.storage.getItems() ?? [];
-      if (!isValidItems(items)) {
+      const items = this.storage.get() ?? [];
+      if (!isValidItemArray(items)) {
         throw new Error('Invalid items');
       }
 
@@ -32,17 +32,17 @@ class ItemsStorage {
 
   public setItem(item: Item): void {
     try {
-      if (!isValidItemFields(item)) {
+      if (!isValidItem(item)) {
         throw new Error('Invalid item fields');
       }
 
-      const currentItems = this.storage.getItems() ?? [];
-      if (!isValidItems(currentItems)) {
+      const currentItems = this.storage.get() ?? [];
+      if (!isValidItemArray(currentItems)) {
         throw new Error('Invalid items');
       }
 
       const items: Item[] = [...currentItems, item];
-      this.storage.setItems(items);
+      this.storage.set(items);
     } catch (error: unknown) {
       this.logError(error);
     }
@@ -50,7 +50,7 @@ class ItemsStorage {
 
   public clearItems(): void {
     try {
-      this.storage.clearItems();
+      this.storage.clear();
     } catch (error: unknown) {
       this.logError(error);
     }

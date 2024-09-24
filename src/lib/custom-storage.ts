@@ -5,30 +5,30 @@ export class CustomStorage<T> {
     this.key = key;
   }
 
-  public getItems(): T | null {
+  public get(): T | null {
     try {
       const data = localStorage.getItem(this.key);
       if (!data) return null;
 
       return JSON.parse(data) as T;
     } catch (error) {
-      throw new Error('Failed to retrieve items from storage');
+      throw new Error(`Failed to retrieve item from storage for key ${this.key}`);
     }
   }
 
-  public setItems(items: T[]): void {
+  public set(item: T): void {
     try {
-      localStorage.setItem(this.key, JSON.stringify(items));
+      localStorage.setItem(this.key, JSON.stringify(item));
     } catch (error) {
-      throw new Error('Failed to set items in storage');
+      throw new Error('Failed to set item in storage for key ${this.key}');
     }
   }
 
-  public clearItems(): void {
+  public clear(): void {
     try {
       localStorage.removeItem(this.key);
     } catch (error) {
-      throw new Error('Failed to clear items from storage');
+      throw new Error('Failed to clear item from storage for key ${this.key}');
     }
   }
 }

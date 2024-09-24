@@ -1,12 +1,12 @@
 import { Item } from './types';
 
-export function isValidItems(items: unknown): items is Item[] {
+export function isValidItemArray(items: unknown): items is Item[] {
   if (!items || !Array.isArray(items)) {
     return false;
   }
 
   for (const item of items) {
-    if (!isValidItemFields(item)) {
+    if (!isValidItem(item)) {
       return false;
     }
   }
@@ -14,7 +14,7 @@ export function isValidItems(items: unknown): items is Item[] {
   return true;
 }
 
-export function isValidItemFields(item: unknown): item is Item {
+export function isValidItem(item: unknown): item is Item {
   if (!item || typeof item !== 'object') {
     return false;
   }
@@ -23,10 +23,10 @@ export function isValidItemFields(item: unknown): item is Item {
     return false;
   }
 
-  return idNumber(item.id) && isString(item.name);
+  return isNumber(item.id) && isString(item.name);
 }
 
-export function idNumber(num: unknown): num is number {
+export function isNumber(num: unknown): num is number {
   return typeof num === 'number';
 }
 
